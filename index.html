@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Opioid Crisis, Structural Violence, Symbolic Violence, and Safe Consumption Sites</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- RESET & BASIC SETUP --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background-color: #fdfdfd;
+            color: #222;
+            font-family: 'Merriweather', serif;
+            line-height: 1.9;
+            font-size: 18px;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 { font-family: 'Montserrat', sans-serif; text-transform: uppercase; color: #111; }
+        
+        a { color: #c0392b; text-decoration: none; border-bottom: 1px dotted #c0392b; }
+
+        /* --- HERO SECTION --- */
+        #hero {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), 
+                        url('https://ca-times.brightspotcdn.com/dims4/default/f6dc586/2147483647/strip/true/crop/6555x4370+0+0/resize/1200x800!/quality/75/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F3b%2F73%2F2f1d0c9b4c9b8851b473cb5b0082%2F947778-me-vancouver-safe-drug-site-gxc-4106.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #hero h1 { 
+            font-size: 3rem; 
+            letter-spacing: -1px; 
+            margin-bottom: 20px; 
+            text-shadow: 0 4px 10px rgba(0,0,0,0.8); 
+            max-width: 900px; 
+            line-height: 1.2;
+            color: #ffffff; /* Explicitly White */
+        }
+        
+        .scroll-indicator { margin-top: 50px; animation: bounce 2s infinite; font-size: 0.8rem; letter-spacing: 2px; opacity: 0.9; font-family: 'Montserrat', sans-serif; text-transform: uppercase; color: white; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }
+
+        /* --- NARRATIVE TEXT SECTIONS --- */
+        .narrative-block {
+            padding: 60px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .content-wrapper {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .content-wrapper h2 {
+            font-size: 2rem;
+            margin-top: 50px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #c0392b;
+        }
+        
+        .content-wrapper h2:first-of-type { margin-top: 0; }
+        .content-wrapper p { margin-bottom: 1.5rem; color: #333; }
+
+        /* Images within text */
+        figure { margin: 2rem 0; text-align: center; }
+        figure img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        figcaption { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: #666; margin-top: 10px; font-style: italic; }
+
+        blockquote {
+            background: #f9f9f9;
+            border-left: 5px solid #444;
+            margin: 1.5em 0;
+            padding: 1em 2em;
+            font-style: italic;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        ol, ul { margin-bottom: 1.5rem; margin-left: 2rem; color: #444; }
+        li { margin-bottom: 10px; padding-left: 10px; }
+
+        /* --- INLINE CHART CONTAINER (For static charts) --- */
+        .static-chart-container {
+            margin: 50px auto;
+            max-width: 850px; 
+            border: 1px solid #eee;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 8px;
+        }
+
+        /* --- SCROLLYTELLING CONTAINERS --- */
+        .scrolly-container {
+            position: relative;
+            display: flex;
+            background-color: #f4f4f4;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* LEFT COLUMN: VISUALS */
+        .sticky-col {
+            position: sticky;
+            top: 0;
+            width: 60%; 
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #f4f4f4;
+        }
+
+        .chart-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 85%;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out; /* Slower fade for smoother transitions */
+            pointer-events: none; 
+            z-index: 1;
+        }
+
+        .chart-wrapper.visible { opacity: 1; pointer-events: auto; z-index: 10; }
+
+        /* RIGHT COLUMN: TEXT STEPS */
+        .scroll-col {
+            width: 40%;
+            position: relative;
+            z-index: 20;
+            padding-bottom: 10vh; 
+        }
+
+        .step {
+            /* INCREASED HEIGHT TO MAKE SCROLLY LONGER */
+            min-height: 130vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .step-content {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 2rem;
+            border-left: 5px solid #c0392b; 
+            box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+            max-width: 500px;
+            opacity: 0.2; 
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(20px);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem; 
+        }
+
+        .step.active .step-content { opacity: 1; transform: translateY(0); }
+        .step h2 { color: #c0392b; margin-bottom: 0.5rem; font-size: 1.4rem; border-bottom: none; }
+        .step p { margin-bottom: 0.8rem; color: #444; }
+
+        /* --- REFERENCES SECTION --- */
+        .references-section {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            color: #555;
+        }
+        .references-section p {
+            margin-bottom: 10px;
+            text-indent: -30px;
+            padding-left: 30px;
+        }
+
+        /* --- MOBILE ADJUSTMENTS --- */
+        @media (max-width: 768px) {
+            #hero h1 { font-size: 2rem; }
+            .scrolly-container { flex-direction: column-reverse; }
+            .sticky-col { position: relative; width: 100%; height: 50vh; top: auto; }
+            .scroll-col { width: 100%; }
+            .step { min-height: 70vh; }
+            .step-content { width: 95%; margin: 0 auto; padding: 1.5rem; }
+            .static-chart-container { width: 100%; padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="hero">
+        <h1>The Opioid Crisis, Structural Violence, Symbolic Violence, and Safe Consumption Sites</h1>
+        <div class="scroll-indicator">SCROLL TO START</div>
+    </header>
+
+    <section class="narrative-block">
+        <div class="content-wrapper">
+            
+            <h2>Background</h2>
+            <p>To understand the contemporary opioid crisis, it is necessary to understand the history of OxyContin, a semisynthetic opioid. Initially, prescription opioids were largely restricted to severe, acute pain and cancer pain. The risk of addiction was high, so it was reserved for extreme pain cases. In the mid-1990s, Purdue Pharma introduced a new drug to market: OxyContin. It was a reformulation of traditional oxycodone but with a slow-release mechanism. It was designed to be absorbed by the body more slowly, thus “eliminating” the highs and crashes that were believed to fuel addiction. This justification is what Purdue Pharma used to differentiate OxyContin from regular opioids and claim low addiction risks. However, not only was the slow-release mechanism ineffective at curbing addiction, but it was also easily bypassed by crushing the pill.</p>
+            <p>With this distinction, they dumped hundreds of millions on an aggressive and predatory marketing campaign, attempting to normalize opioid prescriptions for even the mildest pains. The lengths they would go to were astonishing. Company sales representatives were given data on their region’s physicians and prescribing practices, allowing them to identify and target physicians with a high number of chronic pain patients. With large bonuses and training, they were incentivized to minimize the drug’s risks and increase the amount of written prescriptions. A key part of their marketing strategy was to create a positive perception of the drug. To do this, physicians were showered with branded merchandise ranging from stuffed plushies and mugs to pedometers. They even provided all-expenses-paid trips to pain symposiums at luxury resorts. “It is well documented that this type of pharmaceutical company symposium influences physicians’ prescribing, even though the physicians who attend such symposia believe that such enticements do not alter their prescribing patterns” (Van Zee 221-222).</p>
+
+            <figure>
+                <img src="https://www.statnews.com/wp-content/uploads/2016/10/PharmaSwag.jpg" alt="OxyContin promotional merchandise">
+                <figcaption>OxyContin promotional merchandise</figcaption>
+            </figure>
+
+            <p>After the addictive nature of OxyContin was revealed, it was already too late. Millions of Americans were addicted. The government began to crack down on the drug, reducing the supply. Once the supply was cut, addicts struggled to obtain prescription opioids and were forced to either spend exorbitant amounts of money on illicit suppliers or find an alternative drug. In addition, many who abused opioids for years had developed a tolerance and could not get the same high they sought. For many, it made more sense to move on to a more powerful and cheaper opioid: heroin. Starting in 2010, heroin saw a massive spike in usage. Then, in 2014, another illicit drug began to gain street popularity: fentanyl. It was even cheaper and even more powerful, incentivizing users to switch. With fentanyl being so powerful, concerns arose regarding how little was required to overdose. These concerns were well justified, as fentanyl deaths far exceeded prescription opioid and heroin deaths (Hayes).</p>
+
+            <figure>
+                <img src="https://www.nist.gov/sites/default/files/images/2019/07/31/17mml015_heroin_fentanyl_demonstrative_bat5667.jpg" alt="Lethal dose of heroin vs. fentanyl">
+                <figcaption>Lethal dose of heroin vs. fentanyl</figcaption>
+            </figure>
+
+            <figure>
+                <img src="https://www.nist.gov/sites/default/files/images/2022/10/24/OpioidGraph_v6_Updated10242022_Clean_NoKey_1080_18pt.png" alt="Drug overdose deaths charts">
+                <figcaption>Drug overdose deaths charts</figcaption>
+            </figure>
+
+            <h2>Structural Violence</h2>
+            <p>Next, it is important to understand structural violence. Structural violence is deeply embedded in all aspects of the opioid crisis. Paul Farmer’s On Suffering and Structural Violence: Social and Economic Rights in the Global Era covers two stories of Haitian suffering. The first story was about Acéphie, a poor Haitian woman, who was drawn into a sexual relationship with a soldier. He was known to have multiple regular partners, but as one of the region’s only salaried men, he was hard to resist. She saw him as an opportunity to escape poverty. After a month-long relationship, they had parted. The soldier fell ill and died a few months later; he had AIDS, and Acéphie now did too. Acéphie’s life ended not long thereafter. His stories were important because they were not one-off occurrences; they were representative of many Haitian lives. Acéphie and other Haitians were predisposed to their suffering due to structural violence. Their suffering was “‘structured’ by historically given (and often economically driven) processes and forces that conspire to constrain agency” (Farmer and Amartya 40). Given her socioeconomic position and general situation, she felt like she had no choice but to be in a relationship with the soldier, exposing her to HIV. Thus, she was a victim of structural violence.</p>
+
+            <p>According to Helena Hansen and Julie Netherland, in Is the Prescription Opioid Epidemic a White Problem, the life expectancy of White persons in the US declined due to opioid regulation and marketing, which gave white patients “the ‘privilege’ of unparalleled access to prescription opioids" (Hansen and Netherland 2127). Racially stratified insurance coverage and physician access decreased the proportion of non-White individuals prescribed opioids. In other words, the pain of white patients was perceived to be more important than that of patients of color, and doctors were more readily to address their pain by prescribing opioids. Evidently, the opioid crisis was racialized from the start. The systemic racism by doctors and institutions was a form of structural violence against nonwhite patients. The racism predisposed them to unequal treatment. At a time when opioids were seen as a quick fix to pain and overall beneficial, nonwhite patients were barred from accessing them. Ironically, the racism ended up hurting white patients more, as they were the largest population now hooked on opioids.</p>
+
+            <p>Once the US began cracking down on prescription opioids, they followed a different policy than other drugs, continuing the trend of structural violence against nonwhite individuals. “Rather than arresting consumers, regulators mandated physicians to use Prescription Drug Monitoring Programs, instituted voluntary take-back programs for unused medication, and disseminated the opioid overdose reversal medication naloxone, while passing Good Samaritan laws to protect those calling for emergency assistance during an overdose from drug charges. The arrest rate for sale or possession of manufactured drugs was one-quarter that for the sale or possession of heroin or cocaine, even though prescription opioid misuse far exceeded heroin use” (Hansen and Netherland 2128). These decisions reflected the demographics of users. Since white people were the predominant users of illegal prescription opioids, policymakers favored them with lighter punishments compared to the harsher punishments of heroin or cocaine users, who had a far lower proportion of white users. Not only that, but Congress also approved less restrictive alternative addiction treatment targeting middle-class white individuals. Rather than being forced to do daily dosing in stigmatized methadone clinics, they were able to get a buprenorphine prescription from the doctor’s office to treat at home. With barriers such as certifications courses and variable public insurance coverage, the demographics of those taking buprenorphine matched the target audience: “91% of the US patients taking buprenorphine were White, and most were college educated, employed, and dependent on prescription opioids, in contrast to methadone patients who were less often White, college educated, or employed and who primarily used heroin” (Hansen and Netherland 2128). Essentially, white people were given the privilege to get addiction treatment in a nonstigmatized environment, a privilege nonwhite groups did not have. The stigma around methadone clinics serves as a barrier to addiction treatment, and the prevention of equitable access to the nonstigmatized alternative is a clear form of structural violence against at-risk groups.</p>
+
+            <p>It was only once the supply of prescription opioids dwindled that lawmakers pushed to reduce charges for illegal drugs. This change was not for equality; it was because the constricted supply of opioids made many White Americans transition from opioids to heroin.</p>
+
+            <p>The War on Drugs That Wasn’t: Wasted Whiteness, “Dirty Doctors,” and Race in Media Coverage of Prescription Opioid Misuse by Helena Hansen and Julie Netherland explains how discriminatory practices are reinforced by media coverage of the crisis. They searched US press stories in 2001 and 2011 to find how media coverage of drug use differed from white communities to black and Latino/a communities. Drug use in black and Latino/a communities was considered non-newsworthy, with stories being short and most commonly simple arrest reports. This contrasted with news of suburban, primarily white communities. Despite illicit drug use being relatively similar between black and white individuals, opioid usage was seen as surprising. This is a result of the underlying assumption that drug use is not supposed to occur in suburban communities. They connect this assumption to Steiner and Argothy’s argument that denial is used to reaffirm white supremacy: “Denying white drug use and denying the prevalence of racial inequality allows the drug war's runaway punitiveness to 'make sense' to the majority of Americans. Holding a belief system that portrays underprivileged African Americans and Latino/a Americans as incompetent and criminal at the same time that it reinforces whiteness as competent and law abiding, is the privileged white majority's punitive fix - a ‘cultural crack,’ if you will” (Netherland and Hansen 672). In other words, by painting opioid usage in suburban communities as a lapse from the law-abiding norm, White Americans can justify the disparity in punishment and policy between themselves and nonwhite groups. Since they are not associated with criminal activity, it makes sense for them to get preferential treatment; this is in contrast with black and Latino/a communities being associated with crime.</p>
+
+            <p>News coverage of white opioid addiction stories is also sympathetic and personal. They are not portrayed as criminals, but rather as normal citizens who fell into a trap. In fact, so normal that stories reference how anyone can fall into addiction, the neighbor, the cashier at your local grocery store, or even you, the reader. How they fell into addiction is described in detail. Drug use isn’t assumed or expected; it is justified and explained through a series of events. Often, it is this explanation and justification that absolves the user of any blame. Falling into addiction was a tragedy that was out of their control. There is also the recurring theme of wasted potential. That the addict was a great individual with great potential who had things going for them. These stories are a stark contrast to news reports on black and Latino/a individuals, where the focus is on criminality, not on who they are as people. Their drug use is expected.</p>
+
+            <p>Thus, media coverage perpetuates and justifies the racial discrimination that breeds structural violence.</p>
+
+            <p>Structural violence, however, is not limited to race when it comes to the opioid epidemic. This scene from Philippe Bourgois’ and Jeff Schonberg’s Righteous Dopefiend shows it best: “The liquid residue left over in the cotton filter from Sonny’s jugular injection fills only a tiny corner of Hank’s syringe chamber—less than ten of the units marked on the barrel of the syringe. Determined to suck out every last drop, Hank pinches the cotton between his nicotine and dirt-stained fingers onto the tip of his needle as he gently pulls back on the plunger. This gives him five extra units. Hank does not probe for a vein. Instead, he unbuckles his belt, lowers his pants, and jams his needle into the scarred cheek of his left buttock. A police siren wails from two blocks away. We sit up nervously and Hank stashes the needles behind a bush, kicking the cooker into the dirt. But the siren passes and we relax” (Bourgois and Schonberg 8). I want to draw your attention to three key details:</p>
+            <ol>
+                <li>Hank and Sonny share the same syringe amongst themselves. Sharing is the only logical option for them. Drug paraphernalia is illegal in San Francisco, making access to multiple syringes difficult. In addition, fumbling between multiple syringes lengthens the injection time, which increases the risk of being caught and arrested by law enforcement. However, sharing syringes carries risks of transmitting diseases such as HIV and Hepatitis C.</li>
+                <li>The unsanitary injection process. Hank pinches the cotton containing the liquid residue with dirty hands before injecting it into his body. Without an environment or supplies to inject in a sanity way, Hank and Sonny risk getting infections.</li>
+                <li>The needle was kicked and hidden in the dirt when they heard police sirens. Any future uses of that needle will be even more risky due to how dirty it has become.</li>
+            </ol>
+            <p>The laws and environment force Hank and Sonny to engage in risky injection practices. As a result of policy, they are victims of structural violence since their agency is constrained. Safe consumption sites provide the opportunity to relieve the structural violence Hank and Sonny face, along with the racialized structural violence that served as the backdrop of the opioid crisis.</p>
+
+            <h2>Symbolic Violence</h2>
+            <p>Symbolic violence is a term coined by Pierre Bourdieu. According to him, symbolic violence put as simply as possible is “the violence which is exercised upon a social agent with his or her complicity” (Bourdieu and Wacquant 272). A key component that allows symbolic violence to exist is a deeply internalized belief that affects how the individual perceives and reacts to the world. An example he uses is the relationship dynamic between men and women. There is a persistent belief that men are meant to be the dominant individuals in relationships, whilst women are submissive. This idea is fostered and internalized starting from birth. Thus, when it comes time to enter a relationship, women prefer traits in their male partner that signify dominance. They are attracted to men who are taller and older than they are. If the woman were taller and older, it would appear that she is the dominant one in the relationship. In turn, she feels diminished as she is not following societal norms. As a result, she complicitly places herself in a position of submission by selecting a partner who dominates her. She desires to be in a position of submission and believes that it's her decision, not a consequence of external factors.</p>
+
+            <p>In Righteous Dopefiends, Philippe Bourgois and Jeff Schonberg regard Symbolic violence as an “especially useful concept for critiquing homelessness in the United States because most people (including the Edgewater homeless themselves) consider drug use and poverty to be caused by personal character flaws or sinful behavior” (Bourgois and Schonberg 17). The Edgewater homeless are participating in their own violence by considering their situation to be a result of personal failure rather than systemic issues. This creates feelings of worthlessness and kills confidence. Safe consumption sites can mitigate this symbolic violence. By creating a judgment-free space with referrals for further help, the feeling of undeservingness can be reversed, and recovery from addiction can be made.</p>
+
+            <h2>Safe consumption sites</h2>
+            <p>Safe consumption sites are places where drug users can ingest their drugs under the supervision of trained professionals. Illegal drugs are not provided here; only clean paraphernalia. They are a valuable asset to those undergoing drug addiction, providing a judgment-free and sanitary environment. The philosophy behind these sites is risk aversion: a dead person cannot become a recovered person. Hundreds of these sites exist worldwide, and a few within the United States. Although technically illegal under federal law, many sites continue to exist with both private and taxpayer funding.</p>
+            
+            <p>If Hank and Sonny had access to one of these sites, they would not have to share needles or use unclean paraphernalia, breaking down the structural violence that encourages their risky injection practices. Furthermore, safe consumption sites eliminate the risk of overdose, and an often forgotten consequence: hypoxic injury, brain damage due to insufficient oxygen.</p>
+        </div>
+    </section>
+
+    <main class="scrolly-container">
+        <div class="sticky-col">
+            <div class="chart-wrapper visible" id="chart-health-1">
+                <div class="flourish-embed" data-src="story/3501336"></div>
+            </div>
+            <div class="chart-wrapper" id="chart-health-2">
+                <div class="flourish-embed" data-src="story/3501339"></div>
+            </div>
+            <div class="chart-wrapper" id="chart-health-3">
+                <div class="flourish-embed" data-src="story/3501340"></div>
+            </div>
+        </div>
+
+        <div class="scroll-col">
+            <div class="step" data-chart="chart-health-1">
+                <div class="step-content">
+                    <h2>Overdoses Reversed</h2>
+                    <p>From March 2020 to May 2025, safe consumption sites in Canada reversed 49,255 overdoses with 0 fatalities (Public Health Agency of Canada).</p>
+                    <p>This visual shows what would’ve happened if these sites did not exist. There are 5000 total dots, each one representing 10 overdoses. If these overdoses had not occurred within the site, 46% of them would’ve caused an ambulance run (Chambers 1). That means 23,000 ambulance runs.</p>
+                </div>
+            </div>
+            <div class="step" data-chart="chart-health-2">
+                <div class="step-content">
+                    <h2>Permanent Damage</h2>
+                    <p>Death is not the only risk of overdosing in an unsupervised environment. Oxygen deprivation (hypoxia) quickly leads to brain damage. Without intervention, there would’ve been 5010 cases of permanent brain damage.</p>
+                    <p>4.2% of opioid poisonings had a co-diagnosis of anoxic brain injury during their hospital stay (Health Canada). To account for less serious undocumented injuries, the visual uses a figure of 10%.</p>
+                </div>
+            </div>
+            <div class="step" data-chart="chart-health-3">
+                <div class="step-content">
+                    <h2>Lives Lost</h2>
+                    <p>Had these overdoses not been supervised, there would’ve been 3,340 deaths. Demonstrating the life-saving capabilities of these sites.</p>
+                    <p>“During 2010‒2020, there were approximately 1 fatal overdose per 15 non-fatal” (Casillas 114).</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="narrative-block">
+        <div class="content-wrapper">
+            <h2>The Economic Case</h2>
+            <p>These sites are not a waste of money. They are an investment that saves both lives and taxpayer dollars. The town of Middletown, Ohio, estimates that each ambulance overdose run costs them $1104 (Honig). At that rate, 23,000 ambulance runs over five years would’ve amounted to $25,392,000.</p>
+            <p>A model for a safe use site in San Francisco estimates the savings the city would earn if they implemented a safe consumption site:</p>
+        </div>
+    </section>
+
+    <main class="scrolly-container">
+        <div class="sticky-col">
+            <div class="chart-wrapper visible" id="chart-econ-1">
+                <div class="flourish-embed flourish-chart" data-src="visualisation/26673788"></div>
+            </div>
+            <div class="chart-wrapper" id="chart-econ-2">
+                <div class="flourish-embed flourish-chart" data-src="visualisation/26673711"></div>
+            </div>
+        </div>
+
+        <div class="scroll-col">
+            <div class="step" data-chart="chart-econ-1">
+                <div class="step-content">
+                    <h2>Return on Investment</h2>
+                    <p>For every $1.00 spent on safe consumption sites, $2.30 is saved on medical, emergency, and other costs (Irwin 164).</p>
+                </div>
+            </div>
+            <div class="step" data-chart="chart-econ-2">
+                <div class="step-content">
+                    <h2>Operational Savings</h2>
+                    <p>That means for a site that has $2.6 million in operating expenses, $6.1 million in savings would be generated for the city.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="narrative-block">
+        <div class="content-wrapper">
+            <p>Strategically placed sites also create the opportunity for equity, though it is important that these sites are strategically placed. As Hansen and Netherland state, “the white opioid crisis indicates that if racial exclusions are not explicitly acknowledged, they will be reproduced in medicine and other institutions where opioids are encountered” (Netherland and Hansen 679). An example of a successfully placed safe consumption site is evidenced by OnPoint, an organization that runs two New York safe consumption sites. When comparing overdose deaths in New York with the demographics of OnPoint, there is a clear correlation between the groups most affected and the groups receiving assistance from the organization, thus proving the high accessibility of the safe consumption site to most at-risk populations.</p>
+        </div>
+
+        <div class="static-chart-container">
+            <div class="flourish-embed flourish-chart" data-src="visualisation/26748709"></div>
+        </div>
+
+        <div class="content-wrapper">
+            <p>Medical inequity is a major problem that safe use sites are able to mitigate. Equitable treatment is a stark contrast to the treatment black and Latino/a communities experienced throughout the opioid crisis. From their pain being considered less important, creating fewer opioid prescriptions, to barriers obtaining buprenorphine treatment.</p>
+
+            <h2>Why does it all matter</h2>
+            <p>Safe consumption sites are currently under fire in the United States despite being invaluable tools to break down structural and symbolic violence. In 2025, Congresswoman Nicole Malliotakis sent a letter to the attorney general asking for the two OnPoint sites to be shut down, along with any other safe consumption sites across the country (Krauth). Trump also signed an executive order that explicitly called for the redirection of government funding away from safe use sites (Trump). A primary argument of critics is the claim that safe consumption sites only encourage drug addiction; that they are a dead end in treatment. However, statistics indicate the opposite. From January 2017 to May 2025, safe consumption sites in Canada made 624,728 referrals to external services. In fact, at Insite, a Canadian safe consumption site, “there was greater than a 30% increase in the use of detoxification programs among Insite users in the year after the facility opened. Both the regular use of Insite and access to its counsellors are associated with entry into addiction treatment” (Urban Health Research Initiative 1).</p>
+
+            <p>Another criticism around safe consumption sites is local safety concerns. A study regarding New York’s safe consumption sites found no significant correlation between crime (both property and violent) and the introduction of safe use sites in an area (Chalfin). Another study regarding safe consumption sites in Canada found an immediate spike in break-and-enters, along with a smaller spike in thefts from motor vehicles. However, over time, these numbers stabilized back to the baseline and declined (Panagiotoglou).</p>
+        </div>
+
+        <div class="static-chart-container">
+            <div class="flourish-embed flourish-chart" data-src="visualisation/26747840"></div>
+        </div>
+    </section>
+
+    <section class="narrative-block" style="background-color: #222; color: #eee; border-top: 5px solid #c0392b;">
+        <div class="content-wrapper">
+            <h2 style="color: #fff;">Intent of Project</h2>
+            <p style="color: #ccc;">Safe consumption sites have been controversial since their inception. In media and politics, blanket statements are made regarding their efficacy; one policymaker claims these sites to be areas of sin facilitating addiction, while another praises their importance and life-saving capabilities. Studies regarding their efficacy are littered with complicated language and hard-to-read numbers. Thus, readers are unable to form research-backed perspectives without spending an extenuating amount of time parsing through studies to understand them. Through an interactive website and easy-to-digest visualizations, I hope to break down this barrier.</p>
+        </div>
+    </section>
+
+    <section class="narrative-block references-section">
+        <div class="content-wrapper">
+            <h3>References</h3>
+            <p>Bourdieu, Pierre, and Loïc Wacquant. “Symbolic Violence.” Violence in War and Peace: An Anthropology, Blackwell Publishing, 2004, pp. 272-274.</p>
+            <p>Bourgois, Philippe, and Jeff Schonberg. “Introduction: A Theory of Abuse.” Righteous Dopefiend, 1st ed., University of California Press, 2009, pp. 1–23. JSTOR, http://www.jstor.org/stable/10.1525/j.ctt1pn5bs.3.</p>
+            <p>Casillas, Shannon M et al. “Estimating the ratio of fatal to non-fatal overdoses involving all drugs, all opioids, synthetic opioids, heroin or stimulants, USA, 2010-2020.” Injury prevention : journal of the International Society for Child and Adolescent Injury Prevention vol. 30,2 114-124. 20 Mar. 2024, doi:10.1136/ip-2023-045091.</p>
+            <p>Chalfin, Aaron et al. “Overdose Prevention Centers, Crime, and Disorder in New York City.” JAMA network open vol. 6,11 e2342228. 1 Nov. 2023, doi:10.1001/jamanetworkopen.2023.42228.</p>
+            <p>Chambers, Laura C et al. “The estimated costs and benefits of a hypothetical supervised consumption site in Providence, Rhode Island.” The International journal on drug policy vol. 108 (2022): 103820. doi:10.1016/j.drugpo.2022.103820.</p>
+            <p>Farmer, Paul, and Amartya Sen. “ON SUFFERING AND STRUCTURAL VIOLENCE: SOCIAL AND ECONOMIC RIGHTS IN THE GLOBAL ERA.” Pathologies of Power: Health, Human Rights, and the New War on the Poor, 1st ed., University of California Press, 2003, pp. 29–50. JSTOR, http://www.jstor.org/stable/10.1525/j.ctt1pnznf.7</p>
+            <p>Hansen, Helena, and Julie Netherland. “Is the Prescription Opioid Epidemic a White Problem?.” American journal of public health vol. 106,12 (2016): 2127-2129. doi:10.2105/AJPH.2016.303483.</p>
+            <p>Hayes, B. “Drug overdose deaths chart.” National Institute of Standards and Technology, https://www.nist.gov/image/drug-overdose-deaths-chart-0.</p>
+            <p>Health Canada. “Government of Canada.” Canada.Ca, / Gouvernement du Canada, 12 May 2021, www.canada.ca/en/health-canada/services/opioids/opioid-related-hospitalizations-anoxic-brain-injury.html.</p>
+            <p>Honig, Esther. “As Opioid Overdoses Bleed City’s Budget, Councilman Proposes Stopping Treatment.” NPR, NPR, 29 June 2017, www.npr.org/2017/06/29/534916080/ohio-town-struggles-to-afford-life-saving-drug-for-opioid-overdoses.</p>
+            <p>Irwin, Amos, et al. “A cost-benefit analysis of a potential supervised injection facility in San Francisco, California, USA.” Journal of Drug Issues, vol. 47, no. 2, 13 Dec. 2016, pp. 164–184, https://doi.org/10.1177/0022042616679829.</p>
+            <p>Krauth, Dan. “President Trump Asked to Shut down Safe Injection Sites Operating in New York City.” ABC7 New York, 17 Feb. 2025, abc7ny.com/post/president-trump-asked-shut-down-overdose-prevention-centers-have-operated-3-years-nyc/15907033/.</p>
+            <p>Netherland, Julie, and Helena B Hansen. “The War on Drugs That Wasn't: Wasted Whiteness, "Dirty Doctors," and Race in Media Coverage of Prescription Opioid Misuse.” Culture, medicine and psychiatry vol. 40,4 (2016): 664-686. doi:10.1007/s11013-016-9496-5.</p>
+            <p>NYC Department of Health and Mental Hygiene. Opioid Settlement Funds Report, www.nyc.gov/assets/doh/downloads/pdf/basas/opioid-settlement-funds-report-09302025.pdf. Accessed 12 Dec. 2025.</p>
+            <p>NYC Health. Unintentional Drug Poisoning (Overdose) Deaths in New York City in 2023, www.nyc.gov/assets/doh/downloads/pdf/epi/databrief142.pdf. Accessed 12 Dec. 2025.</p>
+            <p>Panagiotoglou, Dimitra et al. “Toronto's Supervised Consumption Sites and Local Crime.” JAMA network open vol. 8,11 e2545352. 3 Nov. 2025, doi:10.1001/jamanetworkopen.2025.45352.</p>
+            <p>Public Health Agency of Canada. “Dashboard: Supervised Consumption Sites.” Canada.Ca, 19 Sept. 2025, health-infobase.canada.ca/supervised-consumption-sites/.</p>
+            <p>Trump, Donald J. “Ending Crime and Disorder on America’s Streets.” The White House, The United States Government, 24 July 2025, www.whitehouse.gov/presidential-actions/2025/07/ending-crime-and-disorder-on-americas-streets.</p>
+            <p>Urban Health Research Initiative. Insight into Insite, www.bccsu.ca/wp-content/uploads/2016/10/insight_into_insite.pdf. Accessed 12 Dec. 2025.</p>
+            <p>Van Zee, Art. “The promotion and marketing of oxycontin: commercial triumph, public health tragedy.” American journal of public health vol. 99,2 (2009): 221-7. doi:10.2105/AJPH.2007.131714.</p>
+        </div>
+    </section>
+
+    <script src="https://public.flourish.studio/resources/embed.js"></script>
+    <script>
+        // Universal Observer for scrolly sections
+        const steps = document.querySelectorAll('.step');
+        let currentChartId = null;
+
+        const config = {
+            threshold: 0.6,
+            rootMargin: "-5% 0px -5% 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Activate Text
+                    steps.forEach(s => s.classList.remove('active'));
+                    entry.target.classList.add('active');
+
+                    // Switch Chart
+                    const chartId = entry.target.dataset.chart;
+                    if (currentChartId !== chartId) {
+                        currentChartId = chartId;
+                        
+                        // Find container context
+                        const container = entry.target.closest('.scrolly-container');
+                        if (container) {
+                            const containerCharts = container.querySelectorAll('.chart-wrapper');
+                            containerCharts.forEach(c => c.classList.remove('visible'));
+                            
+                            const targetChart = document.getElementById(chartId);
+                            if (targetChart) {
+                                targetChart.classList.add('visible');
+                            }
+                        }
+                    }
+                }
+            });
+        }, config);
+
+        steps.forEach(step => observer.observe(step));
+    </script>
+
+</body>
+</html>
